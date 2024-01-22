@@ -10,6 +10,28 @@ Use the package manager [pip](https://pip.pypa.io/en/stable/) to install pytube 
 pip install pytube
 ```
 
+> NOTE: If you have trouble with youtube age restriction, go to the pytube folder and open the `__main__.py` and change the line 253 from `client='ANDROID_EMBED'` to `client='ANDROID'. You should have something like this:
+>
+> ```python
+> def bypass_age_gate(self):
+>        """Attempt to update the vid_info by bypassing the age gate."""
+>        innertube = InnerTube(
+>            client='ANDROID', # <--- Change this line
+>            use_oauth=self.use_oauth,
+>            allow_cache=self.allow_oauth_cache
+>        )
+>        innertube_response = innertube.player(self.video_id)
+>
+>        playability_status = innertube_response['playabilityStatus'].get('status', None)
+>
+>        # If we still can't access the video, raise an exception
+>        # (tier 3 age restriction)
+>        if playability_status == 'UNPLAYABLE':
+>            raise exceptions.AgeRestrictedError(self.video_id)
+>
+>        self._vid_info = innertube_response
+> ```
+
 ```bash
 pip install ffmpeg
 ```
