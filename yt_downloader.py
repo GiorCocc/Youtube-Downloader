@@ -48,6 +48,7 @@ def mergingFile(video_path, audio_path, output_path):
         os.remove(audio_path)
     except:
         print(RED + "Error merging audio and video files!! Splitted files are saved in the same folder as the program, but they are not merged!!" + END)
+        print(ORANGE + "You can merge them manually using ffmpeg: ffmpeg -i "  + video_path + " -i " + audio_path + " -c:v copy -c:a aac " + output_path + END)
 
 def printDetails(yt, i):
     print(MAGENTA + "\nDetails for Video", i, "\n" + END)
@@ -114,6 +115,7 @@ def main():
         link = links[i]
         yt = YouTube(link, use_oauth=True, allow_oauth_cache=True)
         yt._age_restricted = True    # To download age restricted videos
+        yt.bypass_age_gate()         # To download age restricted videos
 
         printDetails(yt, i+1)
         
@@ -147,11 +149,11 @@ def main():
             try:
                 # Get the path of the video and audio files
                 default_filename_no_extension = yt_video.default_filename[:yt_video.default_filename.rfind(".")]
-                video_path = os.getcwd() + default_filename_no_extension + " (video)" + yt_video.default_filename[yt_video.default_filename.rfind("."):]
-                audio_path = os.getcwd() + default_filename_no_extension + " (audio)" + yt_audio.default_filename[yt_audio.default_filename.rfind("."):]
+                video_path = os.getcwd() + "\\" + default_filename_no_extension + " (video)" + yt_video.default_filename[yt_video.default_filename.rfind("."):]
+                audio_path = os.getcwd() + "\\" + default_filename_no_extension + " (audio)" + yt_audio.default_filename[yt_audio.default_filename.rfind("."):]
 
                 # Start the thread and do not wait for it to finish
-                t = threading.Thread(target=mergingFile, args=(video_path, audio_path, os.getcwd() + default_filename_no_extension + ".mp4"))
+                t = threading.Thread(target=mergingFile, args=(video_path, audio_path, os.getcwd() + "\\" + default_filename_no_extension + ".mp4"))
                 t.start()
 
             except:
